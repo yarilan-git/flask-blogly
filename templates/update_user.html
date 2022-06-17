@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <div id="content_area">
+    
+    
+        <h1>Edit a user</h1>
+        {% set act_2 = "/users/" + user.id|string + "/save_edits/" %}
+        
+        <form  action = {{act_2}} method="POST">
+       
+            <label  class="form_element" for="f_name">First name</label>
+            <input  class="form_element" type="text" name="f_name" id="f_name" value={{user.first_name}}>
+
+            <label  class="form_element" for="l_name">Last name</label>
+            <input  class="form_element" type="text" name="l_name" id="l_name" value={{user.last_name}}>
+
+            <label  class="form_element" for="url">Image URL</label>
+            <input  class="form_element" type="url" name="image_url" id="url" value={{user.image_url}}>
+    
+            <button formaction = '/' formmethod = 'GET' class="inline" type="submit">Cancel</button>
+            <button  class="inline" type="submit">Save</button>
+    </form>
+  </div>
+{% endblock %}
