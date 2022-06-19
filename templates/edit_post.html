@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+<h1>Edit post</h1>
+{% set act = '/posts/' + post.id|string + '/edit/' %}
+
+
+<form  action = {{act}} method="GET">
+    <div class="form_line">
+        <textarea name="title" id="title" cols=39" rows="1" autofocus  required>{{post.title}}</textarea>
+    </div>
+    <div class="form_line">
+        <textarea name="content" id="text" cols=39" rows="10"  required>{{post.content}}</textarea>
+        <!-- <input type="text" name="content" id="content"> -->
+    </div>
+
+    
+    <button class="inline" type="submit">Cancel</button>
+    <button formmethod="POST" class="inline" type="submit">Save</button>
+    
+    
+</form>
+</div>
+{% endblock %}

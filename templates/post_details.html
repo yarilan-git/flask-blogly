@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <div id="content_area">
+    <h1>{{post.title}}</h1>
+    <p>{{post.content}}</p><br>
+    <i>By {{user.first_name}} {{user.last_name}}</i>
+    <form action="/" method="GET">
+        <button class="inline" formaction="/users/{{user.id}}/" id="cancel" type="submit">Cancel</button>
+        <button class="inline"  formaction="/posts/{{post.id}}/edit/" id="edit" type="submit">Edit</button>
+        <button class="inline"  formaction="/posts/{{post.id}}/delete/" formmethod="POST" id="delete" type="submit">Delete</button>
+    </form>
+  </div>
+{% endblock %}

@@ -4,7 +4,7 @@ form {
 }
 
 .form_line, button {
-    display: block;    
+    display: block; 
 }
 
 .form_element  {
@@ -23,9 +23,25 @@ label {
 button {
     width: 150px;
     height: 30px;    
-    margin-top: 20px;
+    /* margin-top: 20px; */
     margin-bottom: 5px;
+    margin-left: 0%;
     background-color:lightblue;
+}
+
+#cancel {
+    background-color: white;
+    color: black;
+}
+
+#delete {
+    background-color: lightcoral;
+    columns: white ;
+}
+
+
+#buttons {
+     margin-left: 0%;
 }
 
 .message {
@@ -45,7 +61,7 @@ button {
 }
 
 #content_area {
-    width: 500px;
+    width: 550px;
     border: 1px solid black;
 }
 
@@ -57,8 +73,8 @@ img {
     width: 100px;
     height: 150px;
     object-fit:cover;
+    /* float: left; */
     float: left;
-    margin-right: 5px;
 }
 
 .user_details   {
@@ -66,8 +82,40 @@ img {
 }
 
 h1  {
-    margin: auto;
+    margin-top: 0%;
 }
+
+#dits {
+    /* position: relative; */
+    top: 10px;
+    margin-left: 5px;
+    }
+
+#horizontal_label {
+    width: 50px;
+    display: inline-block;
+    text-align:inherit;
+    border: 1px solid black;
+}
+
+
+
+#title, #content  {
+    width: 300px;
+    margin-bottom: 5px;
+}
+
+#content    {
+    height: 300px;
+    vertical-align:text-top;
+    overflow-wrap: normal;
+}
+
+textarea    {
+    user-select: all;
+}
+
+
 
 
 

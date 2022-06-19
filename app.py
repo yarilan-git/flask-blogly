@@ -2,7 +2,8 @@
 
 from flask  import Flask, render_template, request, flash, jsonify, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User
+from models import db, connect_db, User, Post
+from datetime import date
 
 app = Flask(__name__)
 
@@ -68,6 +69,57 @@ def save_edits(id):
     db.session.add(user)
     db.session.commit()
     return redirect('/')
+
+@app.route('/users/<int:id>/posts/new/', methods=['GET', 'POST'])
+def show_add_form_post(id):
+    user=User.query.get(id)
+    if request.method == 'GET':
+        return render_template('/new_post_form.html', title='New post', user=user)
+    else:
+        new_post = Post(title = request.form['title'],
+                        content = request.form['content'],
+                        created_at = date.today(),
+                        user_id = id)
+        db.session.add(new_post)
+        db.session.commit()
+    return render_template('/user_details.html', title='User details', user=user)
+
+@app.route('/posts/<int:post_id>/')
+def show_post(post_id):
+    post=Post.query.get(post_id)
+    user=User.query.get(post.user_id)
+    return render_template('/post_details.html', title='Post details', post=post, user=user)
+
+
+@app.route('/posts/<int:post_id>/delete/', methods=['POST'])
+def delete_post(post_id):
+    post=Post.query.get(post_id)
+    user=User.query.get(post.user_id)
+    Post.query.filter_by(id=post_id).delete()
+    db.session.commit()
+    return render_template('/user_details.html', title='User details', user=user)
+
+@app.route('/posts/<int:post_id>/edit/')
+def edit_post(post_id):
+    post=Post.query.get(post_id)
+    user=User.query.get(post.user_id)
+    return render_template('/edit_post.html', title='Edit post', post=post, user=user)
+
+@app.route('/posts/<int:post_id>/edit/', methods=['POST'])
+def save_post_edits(post_id):
+    post=Post.query.get(post_id)
+    user=User.query.get(post.user_id)    
+    post.title = request.form['title']
+    post.content = request.form['content']
+    db.session.add(post)
+    db.session.commit()
+    return render_template('/user_details.html', title='User details', user=user)
+
+
+
+
+
+
     
 
 

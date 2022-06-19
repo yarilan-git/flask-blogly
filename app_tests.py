@@ -1,6 +1,6 @@
 from app import app
 from unittest import TestCase
-from models import User, db, connect_db
+from models import User, db, connect_db, Post
 
 
 
@@ -9,18 +9,20 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_ECHO'] = True
 app.config["DEBUG_TB_INTERCEPT_REDIRECTS"] = False
 
+connect_db(app)
+
 class Tester(TestCase):
 
     
 
     @classmethod
     def setUpClass(self):
-        connect_db(app)
         db.drop_all()
         db.create_all()
         
         
     def setUp(self):
+        
         recs = [User(first_name= 'Yaron', last_name='Ilan', image_url='www.cnn.com'),
             User(first_name='Danny', last_name='Smith', image_url='www.google.com'),
             User(first_name= 'John', last_name='Dow', image_url='www.nbc.com')]
@@ -71,5 +73,54 @@ class Tester(TestCase):
 
             self.assertEqual(resp.status_code, 200)
             self.assertIn("Yaronile", html)
+
+    def test_show_new_post_form(self):
+        with app.test_client() as client:  
+            resp=client.get('/users/1/posts/new/')
+            html=resp.get_data(as_text=True)
+            self.assertIn("Add post for Yaron", html)
+        
+
+    def test_sdd_new_post(self):
+        with app.test_client() as client:  
+            new_post={'title': 'A test title',
+                       'content': 'The test post content'}
+            resp=client.post('/users/1/posts/new/', data=new_post)
+            html=resp.get_data(as_text=True)
+            self.assertIn("Yaron Ilan", html)
+            self.assertIn('A test title', html)
+            
+    def test_show_post_details(self):
+        with app.test_client() as client:  
+            resp=client.get('/posts/1/')
+            html=resp.get_data(as_text=True)
+            self.assertIn('A test title', html)
+            self.assertIn('The test post content', html)
+
+
+
+    def test_show_edit_post_form(self):
+        with app.test_client() as client:  
+            resp=client.get('/posts/1/edit/')
+            html=resp.get_data(as_text=True)
+            self.assertIn('Edit post', html)
+            self.assertIn('A test title', html)
+
+    
+    def test_delete_post(self):
+        with app.test_client() as client:  
+            resp=client.post('/posts/1/delete/', data={})
+            html=resp.get_data(as_text=True)
+            self.assertIn('A test title', html)
+
+
+ 
+
+
+
+
+
+
+
 
     

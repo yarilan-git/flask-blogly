@@ -2,18 +2,36 @@
 
 {% block body %}
     <div id="content_area">
+        <!-- <div class="inline"> -->
         
-        {% set pic = user.image_url  %} 
-        {% set act_1 = "/users/" + user.id|string + "/edit/" %}
-        {% set act_2 = "/users/" + user.id|string + "/delete/" %}
-        {% if user.image_url %}
-            <img src={{user.image_url}}> 
-        {% endif %}
-        <h1>{{user.first_name}} {{user.last_name}}</h1> <br>
-        <form>
-            <button formaction={{act_1}} formmethod = 'POST' class="user_details" id="edit">Edit</button>
-            <button formaction={{act_2}} formmethod = 'POST' class="user_details"  id="del">Delete</button>
-        </form>
+            {% set pic = user.image_url  %} 
+            {% set act_1 = "/users/" + user.id|string + "/edit/" %}
+            {% set act_2 = "/users/" + user.id|string + "/delete/" %}
+            {% if user.image_url %}
+                <img src={{user.image_url}}> 
+            {% endif %}
+        <!-- </div> -->
+        <div id="dits" class="inline">
+            <h1>{{user.first_name}} {{user.last_name}}</h1>
+            <form id="buttons">
+                <button formaction={{act_1}} formmethod = 'POST' class="user_details" id="edit">Edit</button>
+                <button formaction={{act_2}} formmethod = 'POST' class="user_details"  id="del">Delete</button>
+            </form>
+        
+            {% if user.posts %}
+                <h1>Posts</h1>
+                <ul>
+                    {% for post in user.posts %}
+                        <li><a href="/posts/{{post.id}}/">{{post.title}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            
+            {% set act="/users/" + user.id|string + "/posts/new/" %} 
+            <form id="buttons" action={{act}}>
+                <button type="submit">Add Post</button>
+            </form>  
+        </div>      
     </div>
 
 {% endblock %}
