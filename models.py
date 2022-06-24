@@ -1,4 +1,5 @@
 """Models for Blogly."""
+from unicodedata import name
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
@@ -26,7 +27,7 @@ class Post(db.Model):
     __tablename__ = 'post'
 
     def __repr__(self):
-        return f"id: {self.id}, title: {self.title}, content: {self.content}, created: {self.created_at} user_id: {self.user_id} writer: {self.writer}"
+        return f"id: {self.id}, title: {self.title}, content: {self.content}, created: {self.created_at} user_id: {self.user_id} writer: {self.writer} tags: {self.tags}"
 
     id = db.Column(db.Integer,
                    primary_key = True,
@@ -34,6 +35,34 @@ class Post(db.Model):
     title = db.Column(db.String(50), nullable=False)
     content = db.Column(db.Text, nullable=False)
     created_at = db.Column(db.Date)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id', ondelete = 'SET NULL'))
     writer = db.relationship('User', backref='posts')
+    tags = db.relationship('Tag', secondary='post_tag', backref='posts')
+
+class Tag(db.Model):
+    __tablename__ = 'tag'
+
+    def __repr__(self):
+        return f'id: {self.id} name: {self.name} posts: {self.posts}'
+
+    id = db.Column(db.Integer, primary_key = True, autoincrement = True)
+    name = db.Column(db.String(50), nullable=False)
+
+class Post_Tag(db.Model):
+    __tablename__ = 'post_tag'
+
+    def __repr__(self):
+        return f'post_id: {self.post_id} tag_id: {self.tag_id}'
+
+    post_id = db.Column(db.Integer, 
+                        db.ForeignKey('post.id', ondelete='CASCADE'), 
+                        primary_key = True
+                        )
+    tag_id = db.Column(db.Integer,
+                        db.ForeignKey('tag.id', ondelete='CASCADE'),
+                        primary_key = True)
+    
+
+
+
 

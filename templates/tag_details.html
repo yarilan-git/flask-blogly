@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <div id="content_area">
+    
+    
+        <h1>{{tag.name}}</h1>
+
+        {% for post in tag.posts %}
+            <ul>
+                <li>{{post.title}}</li>
+            </ul>
+        {% endfor %}
+
+        {% set edit_action = '/tags/' + tag.id|string + '/edit/' %}
+        {% set delete_action = '/tags/' + tag.id|string + '/delete/' %}
+        <form action="/" method="POST">
+            <div class="form_line">
+                <button formaction = {{edit_action}} formmethod="GET" class="inline" type="submit">Edit tag</button>
+                <button formaction= {{delete_action}} class="inline" type="submit">Delete tag</button>
+            </div>
+        </form>
+  </div>
+{% endblock %}

@@ -29,7 +29,8 @@
             
             {% set act="/users/" + user.id|string + "/posts/new/" %} 
             <form id="buttons" action={{act}}>
-                <button type="submit">Add Post</button>
+                <button type="submit" class="inline">Add Post</button>
+                <button formaction="/" formmethod = 'GET' class="inline" type="submit">Cancel</button>
             </form>  
         </div>      
     </div>

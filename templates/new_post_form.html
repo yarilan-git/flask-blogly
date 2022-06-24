@@ -13,7 +13,14 @@
     <div class="form_line">
         <textarea name="content" id="text" cols=39" rows="10" placeholder="Enter post content here" required></textarea>
         <!-- <input type="text" name="content" id="content"> -->
-    </div>
+    </div><br>
+
+    <div>
+        {% for tag in tags %}
+            <input type="checkbox" name="post_tags" id={{tag.id}} value={{tag.id}}>
+            <label for={{tag.id}}>{{tag.name}}</label><br>
+        {% endfor %}
+    </div><br>
 
     
     <button formaction={{act_1}} formmethod="get" class="inline" type="submit">Cancel</button>

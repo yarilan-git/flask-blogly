@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div id="content_area">
+        
+            {% if tags %}
+                <h1>Tags</h1>
+                <ul>
+                    {% for tag in tags %}
+                        {% set route='/tags/' + tag.id|string +'/' %}
+                        <li><a href={{route}}>{{tag.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <h2>Currently there are no tags</h2>
+            {% endif %}
+
+            <form id="buttons" action='/' method='GET'>
+                <button class="inline" formaction='/tags/new'  id="add_tag">Add tag</button>
+                <button class="inline"  id="Go_back">Go Back</button>
+            </form>
+    </div>
+
+{% endblock %}

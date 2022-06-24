@@ -4,19 +4,38 @@
 
 <h1>Edit post</h1>
 {% set act = '/posts/' + post.id|string + '/edit/' %}
+{% set cancel_act = '/posts/' + post.id|string + '/' %}
 
 
 <form  action = {{act}} method="GET">
     <div class="form_line">
-        <textarea name="title" id="title" cols=39" rows="1" autofocus  required>{{post.title}}</textarea>
+        <textarea name="title" id="title" cols="39" rows="1" autofocus  required>{{post.title}}</textarea>
     </div>
     <div class="form_line">
-        <textarea name="content" id="text" cols=39" rows="10"  required>{{post.content}}</textarea>
-        <!-- <input type="text" name="content" id="content"> -->
+        <textarea name="content" id="text" cols="39" rows="10"  required>{{post.content}}</textarea>
     </div>
 
+
+    <div>
+        
+        {% for tag in tags %}
+            {% set globals = namespace(has_tag=false) %}
+                {% for post_tag in post.tags %}
+                    {% if tag.id == post_tag.id %}
+                        {% set globals.has_tag = true %}
+                    {% endif %}
+                {% endfor %} 
+                {% if globals.has_tag %}
+                    <input type="checkbox" name="post_tags" id={{tag.id}} value={{tag.id}} checked>
+                {% else %}
+                    <input type="checkbox" name="post_tags" id={{tag.id}} value={{tag.id}}>
+                {% endif %}
+                <label for={{tag.id}}>{{tag.name}}</label><br>
+        {% endfor %}
+    </div><br>
+
     
-    <button class="inline" type="submit">Cancel</button>
+    <button formaction={{cancel_act}} class="inline" type="submit">Cancel</button>
     <button formmethod="POST" class="inline" type="submit">Save</button>
     
     

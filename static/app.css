@@ -115,6 +115,16 @@ textarea    {
     user-select: all;
 }
 
+.tag    {
+    display: inline-block;
+    border-radius: 3px;
+    background-color: blue;
+    color: white;
+    padding: 3px;
+}
+
+
+
 
 
 

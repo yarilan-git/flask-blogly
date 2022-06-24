@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block body %}
+
+  <div id="content_area">
+    
+        {%if title == 'Add a tag' %}
+            <h1>Create a tag</h1>
+            {% set btn_text = 'Add' %}
+            {% set btn_action = '/tags/new/' %}
+            {% set cancel_action = '/' %}
+        {% else %}
+            <h1>Edit a tag</h1>
+            {% set btn_text = 'Save' %}
+            {% set btn_action = '/tags/' + tag.id|string + '/edit/' %}
+            {% set cancel_action = '/tags/' %}
+        {% endif %}
+
+        <form action="/" method="POST">
+            <div class="form_line">
+                <label  class="inline" for="name">Name</label>
+                {% if title == 'Edit a tag' %}
+                    <input  class="inline" type="text" name="name" id="name" value={{tag.name}} autofocus onfocus="this.select()">
+                {% else %}
+                    <input  class="inline" type="text" name="name" id="name" autofocus onfocus="this.select()">               
+                {% endif %}
+            </div><br>
+
+            <div class="form_line">
+                <button formaction = {{cancel_action}} formmethod="GET" class="inline" type="submit">Cancel</button>
+                <button formaction={{btn_action}} class="inline" type="submit">{{btn_text}}</button>
+            </div>
+        </form>
+  </div>
+{% endblock %}

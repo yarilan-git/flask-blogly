@@ -2,7 +2,7 @@
 
 from flask  import Flask, render_template, request, flash, jsonify, redirect, session
 from flask_debugtoolbar import DebugToolbarExtension
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, Post_Tag
 from datetime import date
 
 app = Flask(__name__)
@@ -73,8 +73,9 @@ def save_edits(id):
 @app.route('/users/<int:id>/posts/new/', methods=['GET', 'POST'])
 def show_add_form_post(id):
     user=User.query.get(id)
+    tags = Tag.query.all()
     if request.method == 'GET':
-        return render_template('/new_post_form.html', title='New post', user=user)
+        return render_template('/new_post_form.html', title='New post', user=user,tags=tags)
     else:
         new_post = Post(title = request.form['title'],
                         content = request.form['content'],
@@ -82,6 +83,13 @@ def show_add_form_post(id):
                         user_id = id)
         db.session.add(new_post)
         db.session.commit()
+        for tag in request.form.getlist('post_tags'):
+            new_post_tag = Post_Tag(post_id=new_post.id,
+                                    tag_id=tag)
+            db.session.add(new_post_tag)
+            db.session.commit()
+        
+        
     return render_template('/user_details.html', title='User details', user=user)
 
 @app.route('/posts/<int:post_id>/')
@@ -102,8 +110,8 @@ def delete_post(post_id):
 @app.route('/posts/<int:post_id>/edit/')
 def edit_post(post_id):
     post=Post.query.get(post_id)
-    user=User.query.get(post.user_id)
-    return render_template('/edit_post.html', title='Edit post', post=post, user=user)
+    tags=Tag.query.all()
+    return render_template('/edit_post.html', title='Edit post', post=post, tags=tags)
 
 @app.route('/posts/<int:post_id>/edit/', methods=['POST'])
 def save_post_edits(post_id):
@@ -112,9 +120,58 @@ def save_post_edits(post_id):
     post.title = request.form['title']
     post.content = request.form['content']
     db.session.add(post)
+    Post_Tag.query.filter_by(post_id=post_id).delete()
+    for tag in request.form.getlist('post_tags'):
+            new_post_tag = Post_Tag(post_id=post_id,
+                                    tag_id=tag)
+            db.session.add(new_post_tag)
     db.session.commit()
     return render_template('/user_details.html', title='User details', user=user)
 
+@app.route('/tags/')
+def show_tag_list():
+    tags=Tag.query.all()
+    return render_template('tags.html', title="Tags list", tags=tags)
+
+@app.route('/tags/<int:id>/')
+def show_tag(id):
+    tag=Tag.query.get(id)
+    return render_template('tag_details.html', title='Tag details', tag=tag)
+
+@app.route('/tags/new/')
+def show_add_tag_form():
+    return render_template('add_or_create_tag.html', title='Add a tag')
+
+@app.route('/tags/new/', methods=['POST'])
+def add_new_tag():
+    new_tag = Tag(name=request.form['name'])
+    db.session.add(new_tag)
+    db.session.commit()
+    tags=Tag.query.all()
+    return render_template('tags.html', title='Tags list', tags=tags)
+
+@app.route('/tags/<int:id>/edit/', methods=['GET'])
+def show_edit_tag_form(id):
+    tag=Tag.query.get(id)
+    return render_template('add_or_create_tag.html', title='Edit a tag', tag=tag)
+
+@app.route('/tags/<int:id>/edit/', methods=['POST'])
+def save_tag_updates(id):
+    tag=Tag.query.get(id)
+    tag.name=request.form['name']
+    db.session.add(tag)
+    db.session.commit()
+    tags=Tag.query.all()
+    return render_template('tags.html', title='Tags list', tags=tags)
+
+@app.route('/tags/<int:id>/delete/', methods=['POST'])
+def delete_tag(id):
+    Post_Tag.query.filter_by(tag_id=id).delete()
+    Tag.query.filter_by(id=id).delete()
+    db.session.commit()
+    return redirect('/tags/')
+
+    
 
 
 
